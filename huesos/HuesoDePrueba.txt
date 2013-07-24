@@ -1,0 +1,21 @@
+CREATE TABLE <TABLA> (
+   control_i integer not null,
+   control_m integer not null,
+   orden     integer not null,
+   
+<CAMPOS>
+) IN #DBD#  EXTENT SIZE 160 {160} NEXT SIZE 16 {16} LOCK MODE ROW; 
+
+REVOKE ALL ON <TABLA> FROM public; 
+ 
+GRANT ALL ON <TABLA> TO "netintra"; 
+GRANT SELECT, UPDATE, INSERT, DELETE, INDEX ON <TABLA> TO "public"; 
+GRANT ALL ON <TABLA> TO "role_gen"; 
+GRANT ALL ON <TABLA> TO "role_sit"; 
+
+ALTER TABLE <TABLA> ADD CONSTRAINT PRIMARY KEY (control_i,control_m,orden);
+
+{
+
+<DOCUCOL>
+}
