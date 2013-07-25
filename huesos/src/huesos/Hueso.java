@@ -28,20 +28,29 @@ public class Hueso {
 	private String NL = System.getProperty("line.separator");
 
 	private String plantilla;
+	
+	public String getPlantilla() {
+		return plantilla;
+	}
+
+	public void setPlantilla(String plantilla) {
+		this.plantilla = plantilla;
+	}
+
+
 	private Hashtable<String,String> tokens;
 	private ArrayList<String> tokensPlantilla;
-	private String texto;
 	
 	
 	public Hueso(String fichero) throws Exception {
 		super();
-		this.plantilla = leeFichero(fichero);
+		setPlantilla(leeFichero(fichero));
 		this.tokens = new Hashtable<String,String>();
 		
 	    // Añade los tokens de la plantilla a una lista
 	    tokensPlantilla = new ArrayList<String>();
 	    Pattern p = Pattern.compile("\\<[A-Z]+[A-Z_0-9]*\\>");
-        Matcher matcher = p.matcher(plantilla);
+        Matcher matcher = p.matcher(getPlantilla());
         while (matcher.find()) {
         	if (!tokensPlantilla.contains(matcher.group())) tokensPlantilla.add(matcher.group());
         }
@@ -52,7 +61,7 @@ public class Hueso {
         while(it.hasNext()) {        
            String sToken = it.next();
            System.out.println(sToken);
-           plantilla = plantilla.replaceAll(sToken, scanner.nextLine());
+           setPlantilla(getPlantilla().replaceAll(sToken, scanner.nextLine()));
         }
         scanner.close();
         
