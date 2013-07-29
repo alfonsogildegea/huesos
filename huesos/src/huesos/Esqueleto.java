@@ -6,6 +6,9 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.sql.Array;
+
 import org.apache.commons.cli.*;
 
 public class Esqueleto {
@@ -20,6 +23,7 @@ public class Esqueleto {
 		boolean bVerbose = false;
 		boolean bPortapapeles = false;
 		String sDelimitador;
+		String sHuesoPersonalizado;
 		
 		
 		// --> http://www.adictosaltrabajo.com/tutoriales/tutoriales.php?pagina=commonsCLI
@@ -28,10 +32,11 @@ public class Esqueleto {
         CommandLine       cmdLine = null;   
 
 		Options options = new Options();  
-        options.addOption("h", true,  "Hueso principal del esqueleto");
-        options.addOption("p", "portapapeles", false, "Lee los tokens del portapapeles ");
+        options.addOption("p", true,  "Plantilla principal del esqueleto");
+        options.addOption("e", "excel", false, "Lee los tokens del portapapeles de una excel");
         options.addOption("d", true,  "Delimitador del portapapeles (Por defecto el TAB \t");
         options.addOption("v", "verbose", false, "Para ver que hace");
+        options.addOption("h", "hueso", true, "Hueso con tokens personalizados");
         options.addOption("?", "help", false, "Ayuda ");  
         
         try {
@@ -45,14 +50,14 @@ public class Esqueleto {
 			    return;  
 			}
 			
-            // Hueso
-			sPlantilla = cmdLine.getOptionValue("h");
+            // Plantilla
+			sPlantilla = cmdLine.getOptionValue("p");
 		    if (sPlantilla == null) {  
 		    	throw new org.apache.commons.cli.ParseException("Falta el hueso principal del esqueleto");  
 	        }
 		    
 		    // Portapapeles
-			if (cmdLine.hasOption("p")) {
+			if (cmdLine.hasOption("e")) {
 				bPortapapeles = true;
 			} else {
 				bPortapapeles = false;
@@ -67,7 +72,10 @@ public class Esqueleto {
 
             // Verbose
 			bVerbose = cmdLine.hasOption("verbose");
-		    		    
+
+            // Hueso Personalizado
+			sHuesoPersonalizado = cmdLine.getOptionValue("hueso");
+
         } catch (org.apache.commons.cli.ParseException ex){  
             System.out.println(ex.getMessage());  
             new HelpFormatter().printHelp(Esqueleto.class.getCanonicalName(), options );    // Error, imprimimos la ayuda  
@@ -92,10 +100,24 @@ public class Esqueleto {
 			    String[] asDatos = sPortapapeles.split(sDelimitador);
 				if (bVerbose) System.out.println("Portapapeles: "+sPortapapeles);
 
-			    hueso = new Hueso(sPlantilla, asDatos, bPortapapeles);
-				
+				// Lanza el hueso principal o el personalizado
+			    if (sHuesoPersonalizado.isEmpty()) {
+			    	hueso = new Hueso(sPlantilla, asDatos, bPortapapeles);	
+			    } else {
+			        Constructor c = Class.forName(sHuesoPersonalizado).getConstructor(String.class, String[].class, Boolean.TYPE);
+			        hueso = (Hueso) c.newInstance(sPlantilla, asDatos, bPortapapeles);
+			    }
+			
 			} else {
-				hueso = new Hueso(args[1]);
+				
+				// Lanza el hueso principal o el personalizado
+			    if (sHuesoPersonalizado.isEmpty()) {
+			    	hueso = new Hueso(args[1]);
+			    } else {
+			        Constructor c = Class.forName(sHuesoPersonalizado).getConstructor(String.class);
+			        hueso = (Hueso) c.newInstance(args[1]);
+			    }
+
 			}
 			
 			if (bVerbose) System.out.println(hueso.getPlantilla());

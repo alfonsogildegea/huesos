@@ -208,10 +208,7 @@ function menu_principal()
    let m_ok = true
    menu "OPCIONES."
 
-
 <OPCIONES SimpleOpciones.txt>
-
-
       command "Fin"
          exit menu
   

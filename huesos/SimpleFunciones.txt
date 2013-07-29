@@ -3,7 +3,7 @@
 (fnc)00|======================================================================
 (fnc)01|Nombre funcion..| <NOMBRE_FUNCION>
 (fnc)02|Descripcion.....| <DESCRIPCION_FUNCION>
-(fnc)02|                | 
+(fnc)02|                | <DESCRIPCION2_FUNCION>
 (fnc)03|Valor.recibidos.|
 (fnc)04|Valor.devueltos.|
 (fnc)05|Globales utiliz.|

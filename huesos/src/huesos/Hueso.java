@@ -136,7 +136,7 @@ public class Hueso {
 			String sDelimitador = "\\|";
 			if (asToken.length == 3) sDelimitador = asToken[2];
 
-			if (sDato.charAt(0)=='"') sDato = sDato.substring(1,sDato.length()-1).trim();
+			if (sDato.charAt(0)=='"') sDato = sDato.substring(1,sDato.lastIndexOf('"')).trim();
 
 			String sResultado = "";
 			String[] asDatos = sDato.split("\n");
