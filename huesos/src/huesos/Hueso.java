@@ -124,7 +124,7 @@ public class Hueso {
         
 	}
 
-	private String getToken(String sToken, String sDato) throws Exception {
+	protected String getToken(String sToken, String sDato) throws Exception {
 		
 		String[] asToken = sToken.split(" ");
 		

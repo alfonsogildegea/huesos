@@ -7,7 +7,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.sql.Array;
 
 import org.apache.commons.cli.*;
 
@@ -37,7 +36,7 @@ public class Esqueleto {
         options.addOption("d", true,  "Delimitador del portapapeles (Por defecto el TAB \t");
         options.addOption("v", "verbose", false, "Para ver que hace");
         options.addOption("h", "hueso", true, "Hueso con tokens personalizados");
-        options.addOption("?", "help", false, "Ayuda ");  
+        options.addOption("?", "help", false, "Ayuda ");
         
         try {
         	
@@ -53,7 +52,7 @@ public class Esqueleto {
             // Plantilla
 			sPlantilla = cmdLine.getOptionValue("p");
 		    if (sPlantilla == null) {  
-		    	throw new org.apache.commons.cli.ParseException("Falta el hueso principal del esqueleto");  
+		    	throw new org.apache.commons.cli.ParseException("Falta la plantilla principal del esqueleto");  
 	        }
 		    
 		    // Portapapeles
@@ -92,29 +91,28 @@ public class Esqueleto {
 			Hueso hueso = null;
 			if (bPortapapeles) {
 
-				// Carga los datos desde el portapapeles en un array
+				// Carga los datos desde el portapapeles en el array asDatos
 				String sPortapapeles = copiaDelPortapapeles();
 				int i = sPortapapeles.lastIndexOf("\n");
 				sPortapapeles = (new StringBuilder(sPortapapeles).replace(i,i+1,"\n")).toString();
-				
 			    String[] asDatos = sPortapapeles.split(sDelimitador);
 				if (bVerbose) System.out.println("Portapapeles: "+sPortapapeles);
 
 				// Lanza el hueso principal o el personalizado
-			    if (sHuesoPersonalizado.isEmpty()) {
+			    if (sHuesoPersonalizado == null) {
 			    	hueso = new Hueso(sPlantilla, asDatos, bPortapapeles);	
 			    } else {
-			        Constructor c = Class.forName(sHuesoPersonalizado).getConstructor(String.class, String[].class, Boolean.TYPE);
+			        Constructor<?> c = Class.forName(sHuesoPersonalizado).getConstructor(String.class, String[].class, Boolean.TYPE);
 			        hueso = (Hueso) c.newInstance(sPlantilla, asDatos, bPortapapeles);
 			    }
 			
 			} else {
 				
 				// Lanza el hueso principal o el personalizado
-			    if (sHuesoPersonalizado.isEmpty()) {
+			    if (sHuesoPersonalizado == null) {
 			    	hueso = new Hueso(args[1]);
 			    } else {
-			        Constructor c = Class.forName(sHuesoPersonalizado).getConstructor(String.class);
+			        Constructor<?> c = Class.forName(sHuesoPersonalizado).getConstructor(String.class);
 			        hueso = (Hueso) c.newInstance(args[1]);
 			    }
 
