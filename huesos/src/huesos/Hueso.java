@@ -2,12 +2,8 @@ package huesos;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -17,6 +13,10 @@ import java.util.regex.Pattern;
 
 /**
  * Hueso
+ * 
+ * Un hueso es una parte de un esqueleto, de manera que un esqueleto es un conjunto
+ * de 1 o más huesos. 
+ * Quizás el término más apropiado es snippet. Yo prefiero llamarlo hueso.
  */
 
 /**
@@ -25,22 +25,36 @@ import java.util.regex.Pattern;
  */
 public class Hueso {
 
+	// Constantes
 	private String NL = System.getProperty("line.separator");
 
+	// Propiedades
 	private String plantilla;
-	
-	public String getPlantilla() {
-		return plantilla;
-	}
-
-	public void setPlantilla(String plantilla) {
-		this.plantilla = plantilla;
-	}
-
 	private Hashtable<String,String> tokens;
 	private ArrayList<String> tokensPlantilla;
 	
+	// Getters-Setters
+	public String getPlantilla() {
+		return plantilla;
+	}
+	public void setPlantilla(String plantilla) {
+		this.plantilla = plantilla;
+	}
+	public ArrayList<String> getTokensPlantilla() {
+		return tokensPlantilla;
+	}
+	public void setTokensPlantilla(ArrayList<String> tokensPlantilla) {
+		this.tokensPlantilla = tokensPlantilla;
+	}
 	
+	// Constructores
+	/**
+	 * Pide los tokens en la entrada estándar y devuelve la plantilla actualizada
+	 * en el portapapeles
+	 * 
+	 * @param fichero Plantilla
+	 * @throws Exception
+	 */
 	public Hueso(String fichero) throws Exception {
 		super();
 		setPlantilla(leeFichero(fichero));
@@ -51,7 +65,7 @@ public class Hueso {
         
         // Recorre los tokens del esqueleto
         Scanner scanner = new Scanner(System.in);
-        Iterator<String> it = tokensPlantilla.iterator(); 
+        Iterator<String> it = getTokensPlantilla().iterator(); 
         while(it.hasNext()) {        
            String sToken = it.next();
            System.out.println(sToken);
@@ -64,6 +78,16 @@ public class Hueso {
         
 	}
 	
+
+	/**
+	 * Los tokens vienen en un array bidimensional con el token y el dato. El constructor
+	 * actualiza la plantilla y la devuelve en el portapapeles según el parámetro bPortapapeles
+	 * 
+	 * @param fichero
+	 * @param aTokens
+	 * @param bPortapapeles
+	 * @throws Exception
+	 */
 	public Hueso(String fichero, Hashtable<String,String> aTokens, boolean bPortapapeles) throws Exception {
 		super();
 		setPlantilla(leeFichero(fichero));
@@ -77,7 +101,7 @@ public class Hueso {
 		addTokensPlantilla();
 		
         // Reemplaza los tokens del esqueleto
-        Iterator<String> it = tokensPlantilla.iterator(); 
+        Iterator<String> it = getTokensPlantilla().iterator(); 
         while(it.hasNext()) {        
            String sToken = it.next();
            if (tokens.containsKey(sToken)) {
@@ -90,6 +114,18 @@ public class Hueso {
         
 	}
 
+	
+	/**
+	 * El texto de los tokens está en un array de String, de manera que el 
+	 * dato asDatos[i] será el valor del i-ésimo token distinto de la plantilla.
+	 * El constructor devuelve la plantilla actualizada en el portapapeles según
+	 * el parámetro bPortapapeles.
+	 * 
+	 * @param fichero
+	 * @param asDatos
+	 * @param bPortapapeles
+	 * @throws Exception
+	 */
 	public Hueso(String fichero, String[] asDatos, boolean bPortapapeles) throws Exception {
 		super();
 		setPlantilla(leeFichero(fichero));
@@ -97,21 +133,10 @@ public class Hueso {
 		
 	    // Añade los tokens de la plantilla a una lista
 		addTokensPlantilla();
-		
-        // Reemplaza los tokens del esqueleto
-		int j = 0;
-        Iterator<String> ite = tokensPlantilla.iterator(); 
-        while(ite.hasNext()) {        
-           String sToken = ite.next();
-           if (asDatos.length > j) {
-               System.out.println(j+" "+sToken+" "+asDatos[j]);
-        	   setPlantilla(getPlantilla().replaceAll(sToken, getToken(sToken,asDatos[j++])));
-           }
-        }		
-		
+
         // Reemplaza los tokens del esqueleto
 		int i = 0;
-        Iterator<String> it = tokensPlantilla.iterator(); 
+        Iterator<String> it = getTokensPlantilla().iterator(); 
         while(it.hasNext()) {        
            String sToken = it.next();
            if (asDatos.length > i) {
@@ -124,17 +149,27 @@ public class Hueso {
         
 	}
 
+	/**
+	 * Devuelve el texto por el que se reemplaza el token. Si el token lleva una plantilla 
+	 * se crea un hueso estándar con ésta y se devuelve su resultado.
+	 * 
+	 *  Ejemplos: <NOMBRE> <PLANTILLA ficheroPlantilla.txt> <PLANTILLA2 fic.txt \\|>
+	 * 
+	 * @param sToken
+	 * @param sDato
+	 * @return
+	 * @throws Exception
+	 */
 	protected String getToken(String sToken, String sDato) throws Exception {
 		
 		String[] asToken = sToken.split(" ");
 		
-		if (asToken.length == 1) {
+		if ((asToken.length == 1) || sDato.isEmpty()) {
 			return sDato;	
 		} else {
 			
 			String sPlantilla = asToken[1].replace(">", "");
 			String sDelimitador = "\\|";
-			if (asToken.length == 3) sDelimitador = asToken[2];
 
 			if (sDato.charAt(0)=='"') sDato = sDato.substring(1,sDato.lastIndexOf('"')).trim();
 
@@ -146,10 +181,8 @@ public class Hueso {
 				sResultado += hueso.getPlantilla();
 			}
 			
-			
 			return sResultado;
 		}
-		
 		
 	}
 
@@ -162,7 +195,7 @@ public class Hueso {
         }
 	}
 
-	public void copiaAlPortapapeles() {
+	private void copiaAlPortapapeles() {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Clipboard clipboard = toolkit.getSystemClipboard();
 		StringSelection strSel = new StringSelection(plantilla);
@@ -170,29 +203,6 @@ public class Hueso {
 	}
 
 
-	public static String copiaDelPortapapeles() {
-		String sResult = "";
-		
-		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		Transferable contents = clipboard.getContents(null);
-		boolean hasTransferableText = (contents != null) 
-				       && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
-		if (hasTransferableText) {
-			try {
-				sResult = (String)contents.getTransferData(DataFlavor.stringFlavor);
-			} catch (UnsupportedFlavorException ex){
-				System.out.println(ex);
-				ex.printStackTrace();
-			} catch (IOException ex) {
-				System.out.println(ex);
-				ex.printStackTrace();
-			}
-		}
-		
-		return sResult;
-	}
-	
-	
 	private String leeFichero(String sFichero) throws Exception {
 		StringBuilder text = new StringBuilder();
 		Scanner scanner = new Scanner(new FileInputStream(sFichero));
