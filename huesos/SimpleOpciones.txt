@@ -1,0 +1,6 @@
+      command "<NOMBRE_OPCION>" "<DESCRIPCION_OPCION>"
+         if not <NOMBRE_OPCION>() then
+            call f_errores(g_lin_error)
+            continue menu
+         end if
+         

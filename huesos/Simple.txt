@@ -1,0 +1,258 @@
+{
+(CAB)00|======================================================================
+(CAB)00|DOCUMENTACION CABECERA PROGRAMA
+(CAB)00|----------------------------------------------------------------------
+(CAB)01|NOMBRE PROGRAMA.| <NOMBRE_PROGRAMA>
+(CAB)02|TAREA...........| <TAREA>
+(CAB)03|DESCRIPCION.....| 
+(CAB)03|                | 
+(CAB)03|                |
+(CAB)03|                |
+(CAB)03|                |
+(CAB)03|                |
+(CAB)04|FECHA CREACION..| <FECHA>
+(CAB)05|PETICION........| <PETICION>
+(CAB)06|AUTOR Y EMPRESA.| Alfonso De Gea. Sinergia
+(CAB)07|ORGANIGRAMA.....|
+(CAB)08|PARAM.RECIBIDOS.|
+(CAB)08|                |
+(CAB)09|PARAM.DEVUELTOS.|
+(CAB)09|                |
+(CAB)10|ACCESO FUNCIONES|
+(CAB)10|                |g_acceso_funcion[01] = Buscar
+(CAB)10|                |g_acceso_funcion[02] = Modifica
+(CAB)10|                |g_acceso_funcion[03] = Alta
+(CAB)10|                |g_acceso_funcion[04] = Baja
+(CAB)10|                |g_acceso_funcion[05] = Siguiente
+(CAB)10|                |g_acceso_funcion[06] = Anterior
+(CAB)10|                |g_acceso_funcion[07] = Primero
+(CAB)10|                |g_acceso_funcion[08] = Ultimo
+(CAB)10|                |g_acceso_funcion[09] = Listado
+(CAB)10|                |g_acceso_funcion[10] =
+(CAB)10|                |
+(CAB)11|DOCUM. ASOCIADOS| /pantallas/pan_aaa_nnnnnn.doc
+(CAB)11|                | /listados /lis_aaa_nnnnnn.ppt
+(CAB)11|                | /listados /lih_aaa_nnnnnn.ppt
+(CAB)11|                | /Requisitos del sistema/
+(CAB)99|----------------------------------------------------------------------
+}
+database fuertes
+
+globals "g_gen_new.4gl"
+
+
+   define m_ok, m_error_fo smallint,
+          m_usuario        char(10),
+          m_num_arg   smallint,
+          m_campo1, m_campo2, m_campo3, m_campo4, m_campo5 char(50)
+ 
+
+
+{----------------------------------------------------------------------------}
+main
+   call f_cambio_bas()
+   call f_segurida()
+
+   defer interrupt
+   whenever error continue
+   set isolation to dirty read
+
+   call opciones()
+   call cabecera()
+   call inicializa_form()
+ 
+   let m_usuario = fgl_getenv("LOGNAME")
+  
+   if not menu_principal() then 
+      call f_errores(g_lin_error)
+      exit program -1
+   end if
+
+   exit program 0
+end main
+{----------------------------------------------------------------------------}
+
+{
+(fnc)00|======================================================================
+(fnc)01|Nombre funcion..| opciones
+(fnc)03|Descripcion.....| opciones de informix
+(fnc)03|                |
+(fnc)08|Valor.recibidos.| Ninguno.
+(fnc)08|                |
+(fnc)09|Valor.devueltos.|
+(fnc)18|Globales utiliz.|
+(fnc)19|Globales modifi.|
+(fnc)20|Var.modulo modif|
+(fnc)99|----------------------------------------------------------------------
+}
+function opciones()
+   options error line    last,
+           prompt line   2,
+           Input         wrap,
+           help key      control-I,
+           help file     "gen_ayuda.ex",
+           next key      "F50",
+           previous key  "F51",
+           insert key    "F52",
+           delete key    "F53",
+           sql interrupt on
+end function
+{----------------------------------------------------------------------------}
+
+{
+(fnc)00|======================================================================
+(fnc)01|Nombre funcion..| cabecera
+(fnc)03|Descripcion.....| muestra datos de cabecera del programa,titulo ...
+(fnc)03|                |
+(fnc)08|Valor.recibidos.| Ninguno.
+(fnc)08|                |
+(fnc)09|Valor.devueltos.| 
+(fnc)18|Globales utiliz.|
+(fnc)19|Globales modifi.|
+(fnc)20|Var.modulo modif|
+(fnc)99|----------------------------------------------------------------------
+}
+function cabecera()
+   define l_fecha    date,
+          l_texto    char(100),
+          l_programa char(15),
+          l_tty      char(10);
+ 
+   select nombre_empresa, max_row_select, empresa_real
+      into lr_empresa, gr_max_row, gl_empresa
+      from gen_parametros
+          where codigo_empresa = 0  
+
+   let l_fecha   = today
+   let l_texto   = "                         <TAREA>                             "
+--------------------&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&--------------------------
+   let l_programa= "<NOMBRE_PROGRAMA>"
+   let gr_programa= l_programa
+   let l_tty = fgl_getenv("ERP")
+
+   open window w1 at 1,1
+      with form "gen_titul2"
+      attribute (form line 1,message line 1,prompt line 1)
+
+   display by name l_texto, lr_empresa, l_fecha, l_programa, l_tty
+     attribute (reverse)
+ 
+   open window w2 at 3,2 
+        with 20 rows, 130 columns 
+        attribute (border)
+
+end function
+{----------------------------------------------------------------------------}
+
+
+{
+(fnc)00|======================================================================
+(fnc)01|Nombre funcion..| inicializa_form
+(fnc)03|Descripcion.....| inicializamos los formularios utilizados en el
+(fnc)03|                | programa
+(fnc)08|Valor.recibidos.| Ninguno.
+(fnc)08|                |
+(fnc)09|Valor.devueltos.| Ninguno.
+(fnc)18|Globales utiliz.|
+(fnc)19|Globales modifi.| g_form[X,X]
+(fnc)20|Var.modulo modif|
+(fnc)99|----------------------------------------------------------------------
+}
+function inicializa_form()
+
+  define l_i int,
+         l_j int;
+
+  for l_i = 1 to 10
+    for l_j = 1 to 10
+      let g_form[l_i,l_j] = "<NOMBRE_PROGRAMA>"
+    end for
+  end for
+
+end function
+{----------------------------------------------------------------------------}
+
+
+{
+(fnc)00|======================================================================
+(fnc)01|Nombre funcion..| menu_principal
+(fnc)02|Descripcion.....| Menu Principal
+(fnc)02|                | 
+(fnc)03|Valor.recibidos.|
+(fnc)04|Valor.devueltos.|
+(fnc)05|Globales utiliz.|
+(fnc)06|Globales modifi.|
+(fnc)07|Var.modulo modif|
+(fnc)99|----------------------------------------------------------------------
+}
+function menu_principal()
+   define l_ejecuta char(500),
+          l_semaforo char(50)
+
+
+--   --- Muestra el formulario
+--   open form f1 from g_form[5,1]
+--  
+--   if status <> 0 then
+--      call f_ini_sqlca()
+--      let g_lin_error = "ERROR en formulario ",g_form[5,1] clipped,
+--                        " ,Status = ", status using "-<<<<<<"
+--      call f_errores(g_lin_error)
+--      exit program
+--   end if
+--
+--   display form f1
+
+
+   --- Menu Principal                     
+   let m_ok = true
+   menu "OPCIONES."
+
+
+<OPCIONES SimpleOpciones.txt>
+
+
+      command "Fin"
+         exit menu
+  
+   end menu
+
+
+--   --- Cierra el formulario
+--   close form f1
+
+
+   return m_ok
+end function
+{----------------------------------------------------------------------------}
+
+{
+(fnc)00|======================================================================
+(fnc)01|Nombre funcion..| ejecuta_sql
+(fnc)03|Descripcion.....| Hace el prepare y execute de g_select
+(fnc)03|                | 
+(fnc)08|Valor.recibidos.| 
+(fnc)09|Valor.devueltos.| true/false
+(fnc)18|Globales utiliz.|
+(fnc)19|Globales modifi.|
+(fnc)99|----------------------------------------------------------------------
+}
+function ejecuta_sql()
+
+  prepare p_pe from g_select
+  if sqlca.sqlcode != 0 then
+     call f_guarda_sqlca()
+     return false
+  end if
+   
+  execute p_pe
+  if sqlca.sqlcode != 0 then
+     call f_guarda_sqlca()
+     return false
+  end if
+       
+  return true
+end function
+{----------------------------------------------------------------------------}
+
+<FUNCIONES SimpleFunciones.txt>

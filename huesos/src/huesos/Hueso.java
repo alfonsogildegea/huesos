@@ -37,7 +37,6 @@ public class Hueso {
 		this.plantilla = plantilla;
 	}
 
-
 	private Hashtable<String,String> tokens;
 	private ArrayList<String> tokensPlantilla;
 	
@@ -48,12 +47,7 @@ public class Hueso {
 		this.tokens = new Hashtable<String,String>();
 		
 	    // Añade los tokens de la plantilla a una lista
-	    tokensPlantilla = new ArrayList<String>();
-	    Pattern p = Pattern.compile("\\<[A-Z]+[A-Z_0-9]*\\>");
-        Matcher matcher = p.matcher(getPlantilla());
-        while (matcher.find()) {
-        	if (!tokensPlantilla.contains(matcher.group())) tokensPlantilla.add(matcher.group());
-        }
+		addTokensPlantilla();
         
         // Recorre los tokens del esqueleto
         Scanner scanner = new Scanner(System.in);
@@ -70,6 +64,104 @@ public class Hueso {
         
 	}
 	
+	public Hueso(String fichero, Hashtable<String,String> aTokens, boolean bPortapapeles) throws Exception {
+		super();
+		setPlantilla(leeFichero(fichero));
+		if (aTokens == null) {
+			tokens = new Hashtable<String,String>();
+		} else {
+			tokens = aTokens;
+		}
+		
+	    // Añade los tokens de la plantilla a una lista
+		addTokensPlantilla();
+		
+        // Reemplaza los tokens del esqueleto
+        Iterator<String> it = tokensPlantilla.iterator(); 
+        while(it.hasNext()) {        
+           String sToken = it.next();
+           if (tokens.containsKey(sToken)) {
+        	   setPlantilla(getPlantilla().replaceAll(sToken, getToken(sToken, tokens.get(sToken))));
+           }
+        }
+        
+        //Copia al portapapeles
+        if (bPortapapeles) copiaAlPortapapeles();
+        
+	}
+
+	public Hueso(String fichero, String[] asDatos, boolean bPortapapeles) throws Exception {
+		super();
+		setPlantilla(leeFichero(fichero));
+		tokens = new Hashtable<String,String>();
+		
+	    // Añade los tokens de la plantilla a una lista
+		addTokensPlantilla();
+		
+        // Reemplaza los tokens del esqueleto
+		int j = 0;
+        Iterator<String> ite = tokensPlantilla.iterator(); 
+        while(ite.hasNext()) {        
+           String sToken = ite.next();
+           if (asDatos.length > j) {
+               System.out.println(j+" "+sToken+" "+asDatos[j]);
+        	   setPlantilla(getPlantilla().replaceAll(sToken, getToken(sToken,asDatos[j++])));
+           }
+        }		
+		
+        // Reemplaza los tokens del esqueleto
+		int i = 0;
+        Iterator<String> it = tokensPlantilla.iterator(); 
+        while(it.hasNext()) {        
+           String sToken = it.next();
+           if (asDatos.length > i) {
+        	   setPlantilla(getPlantilla().replaceAll(sToken, getToken(sToken,asDatos[i++])));
+           }
+        }
+        
+        //Copia al portapapeles
+        if (bPortapapeles) copiaAlPortapapeles();
+        
+	}
+
+	private String getToken(String sToken, String sDato) throws Exception {
+		
+		String[] asToken = sToken.split(" ");
+		
+		if (asToken.length == 1) {
+			return sDato;	
+		} else {
+			
+			String sPlantilla = asToken[1].replace(">", "");
+			String sDelimitador = "\\|";
+			if (asToken.length == 3) sDelimitador = asToken[2];
+
+			if (sDato.charAt(0)=='"') sDato = sDato.substring(1,sDato.length()-1).trim();
+
+			String sResultado = "";
+			String[] asDatos = sDato.split("\n");
+			for (String sLinea: asDatos){
+				String[] aLineas = sLinea.split(sDelimitador);
+				Hueso hueso = new Hueso(sPlantilla,aLineas,false);
+				sResultado += hueso.getPlantilla();
+			}
+			
+			
+			return sResultado;
+		}
+		
+		
+	}
+
+	private void addTokensPlantilla() {
+	    tokensPlantilla = new ArrayList<String>();
+	    Pattern p = Pattern.compile("\\<[A-Z]+[a-zA-Z_0-9. ]*\\>");
+        Matcher matcher = p.matcher(getPlantilla());
+        while (matcher.find()) {
+        	if (!tokensPlantilla.contains(matcher.group())) tokensPlantilla.add(matcher.group());
+        }
+	}
+
 	public void copiaAlPortapapeles() {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Clipboard clipboard = toolkit.getSystemClipboard();
