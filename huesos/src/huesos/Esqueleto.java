@@ -147,6 +147,7 @@ public class Esqueleto {
 	/**
 	 * @param args
 	 */
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		
 		Options options = new Options(); 

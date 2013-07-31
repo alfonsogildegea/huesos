@@ -153,7 +153,7 @@ public class Hueso {
 	 * Devuelve el texto por el que se reemplaza el token. Si el token lleva una plantilla 
 	 * se crea un hueso estándar con ésta y se devuelve su resultado.
 	 * 
-	 *  Ejemplos: <NOMBRE> <PLANTILLA ficheroPlantilla.txt> <PLANTILLA2 fic.txt \\|>
+	 *  Ejemplos: <NOMBRE> <PLANTILLA ficheroPlantilla.txt>
 	 * 
 	 * @param sToken
 	 * @param sDato
