@@ -11,6 +11,7 @@ Por ejemplo, podemos tener huesos para porciones de código fuente, para estanda
 
 
 ### ¿Cómo se usan?
+
 Es tan simple como lanzar un programa pasándole como parámetro una plantilla de texto y ésta se cargará automáticamente en el portapapeles.
 
 ```
@@ -20,4 +21,6 @@ $ java -jar huesos.jar -p clientes_con_ventas_ult_ejercicio.sql
 $ java -jar huesos.jar -p tareas_alta_usuario.txt
 $ java -jar huesos.jar -p funcion_listado_horizontal.txt
 ```
+
+En la práctica, no es bueno irte a la línea de comandos y escribir este chorizo, lo más sencillo es enlazarlo a un punto de menú de tu editor preferido o meterlo en una hoja excel con un hipervínculo a un enlace simbólico o una llamada a la función "Shell" de VBA. 
 
