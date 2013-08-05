@@ -14,10 +14,10 @@ Por ejemplo, podemos tener huesos para porciones de código fuente, para estanda
 Es tan simple como lanzar un programa pasándole como parámetro una plantilla de texto y ésta se cargará automáticamente en el portapapeles.
 
 ```
-$ 
+Ejemplos:
+
 $ java -jar huesos.jar -p clientes_con_ventas_ult_ejercicio.sql
 $ java -jar huesos.jar -p tareas_alta_usuario.txt
 $ java -jar huesos.jar -p funcion_listado_horizontal.txt
-$ 
 ```
 
