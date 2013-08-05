@@ -1,4 +1,5 @@
 huesos
 ======
 
-Snippets varios
+Cuando los snippets no son suficientes
+
