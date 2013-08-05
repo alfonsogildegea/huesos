@@ -22,5 +22,6 @@ $ java -jar huesos.jar -p tareas_alta_usuario.txt
 $ java -jar huesos.jar -p funcion_listado_horizontal.txt
 ```
 
-En la práctica, no es bueno irte a la línea de comandos y escribir este chorizo, lo más sencillo es enlazarlo a un punto de menú de tu editor preferido o meterlo en una hoja excel con un hipervínculo a un enlace simbólico o una llamada a la función "Shell" de VBA. 
+En la práctica, no es bueno irte a la línea de comandos y escribir este chorizo, lo más sencillo es enlazarlo a un punto de menú de tu editor preferido o meterlo en una hoja excel con un hipervínculo a un enlace simbólico o a un VBA.
+
 
