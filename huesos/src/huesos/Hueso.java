@@ -188,7 +188,7 @@ public class Hueso {
 
 	private void addTokensPlantilla() {
 	    tokensPlantilla = new ArrayList<String>();
-	    Pattern p = Pattern.compile("\\<[A-Z]+[a-zA-Z_0-9. ]*\\>");
+	    Pattern p = Pattern.compile("\\<[A-Z]+[a-zA-Z_\\\\/0-9. ]*\\>");
         Matcher matcher = p.matcher(getPlantilla());
         while (matcher.find()) {
         	if (!tokensPlantilla.contains(matcher.group())) tokensPlantilla.add(matcher.group());

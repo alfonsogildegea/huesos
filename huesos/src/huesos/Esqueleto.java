@@ -44,7 +44,7 @@ public class Esqueleto {
 			String sPortapapeles = copiaDelPortapapeles();
 			if (sPortapapeles.isEmpty()) throw (new ParseException("Portapapeles vacío"));
 			int i = sPortapapeles.lastIndexOf("\n");
-			if (i>0) sPortapapeles = (new StringBuilder(sPortapapeles).replace(i,i+1,"\n")).toString();
+			if (i>0) sPortapapeles = (new StringBuilder(sPortapapeles).replace(i,i+1,"")).toString();
 		    asDatos = sPortapapeles.split(sDelimitador);
 
 			// Lanza el hueso principal o el personalizado

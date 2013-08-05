@@ -1,0 +1,13 @@
+   drop table tmp_<TABLA>
+
+   let g_select =
+
+      " select * from ",m_bd,"sap_<TABLA> ",
+       " where control_i = ",lr_control_m.cm_serial_i," ",
+        " into temp tmp_<TABLA> with no log "
+
+   if not ejecuta_sql() then
+      let g_lin_error="descarga_mensaje<INTERFAZ> (it) tmp_<TABLA> "
+      return false
+   end if
+

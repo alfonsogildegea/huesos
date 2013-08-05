@@ -1,0 +1,44 @@
+   --- Recorre la temporal tmp_<TABLA>
+   declare c_tmp_<TABLA> cursor for
+    select *
+      from tmp_<TABLA>
+     where 1=1
+     order by orden
+
+   if sqlca.sqlcode < 0 then
+      call f_guarda_sqlca()
+      let g_lin_error="descarga_mensaje<INTERFAZ> (d) tmp_<TABLA>"
+      return false
+   end if
+
+   let m_error_fo = false
+   foreach c_tmp_<TABLA> into lr_<TABLA>.*
+
+
+      if not add_linea("<ABRE_ETIQUETA>") then return false end if
+
+
+      call linea_xml("tmp_<TABLA>","*",lr_<TABLA>.orden) returning m_ok, l_linea
+      if not m_ok then
+         let m_error_fo = true
+         exit foreach
+      end if
+      if not add_linea(l_linea) then
+         let m_error_fo = true
+         exit foreach
+      end if
+
+
+      if not add_linea("<CIERRA_ETIQUETA>") then return false end if
+
+
+   end foreach
+   close c_tmp_<TABLA>
+   free c_tmp_<TABLA>
+   if m_error_fo then return false end if
+   if sqlca.sqlcode < 0 then
+      call f_guarda_sqlca()
+      let g_lin_error="descarga_mensaje<INTERFAZ> (f) c_tmp_<TABLA>"
+      return false
+   end if
+

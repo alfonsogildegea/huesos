@@ -1,0 +1,43 @@
+{
+(fnc)00|======================================================================
+(fnc)01|Nombre funcion..| descarga_mensaje<INTERFAZ>
+(fnc)02|Descripcion.....| <DESCRIPCION>
+(fnc)02|                | 
+(fnc)03|Valor.recibidos.|
+(fnc)04|Valor.devueltos.|
+(fnc)05|Globales utiliz.|
+(fnc)06|Globales modifi.|
+(fnc)07|Var.modulo modif|
+(fnc)99|----------------------------------------------------------------------
+}
+function descarga_mensaje<INTERFAZ>(lr_control_m, lr_mensaje, l_nom_fichero)
+   define l_nom_fichero char(200),
+          lr_control_m  record like sap_i_control_m.*,
+          lr_mensaje    record like sap_i_mensaje.*,
+          l_ejecuta     char(2000),
+          l_linea       char(2000),
+<DEFINES esqueletos/xml_defines>          l_campos      char(2000)
+
+
+   --- Carga los datos en temporales para usar las funciones XML de Informix
+<CREATETMP esqueletos/xml_createtmp>
+   --- Crea una temporal para grabar las líneas del fichero
+   if not crea_tmp_lineas() then return false end if
+
+
+   --- Abre Raiz del XML
+   if not add_linea("<ABRE_RAIZ_INTERFAZ>") then return false end if
+
+<CURSORTMP esqueletos/xml_cursortmp>
+
+   --- Cierra Raiz del XML
+   if not add_linea("<CIERRA_RAIZ_INTERFAZ>") then return false end if
+
+
+   --- Descarga las líneas en un fichero
+   if not descarga_tmp_lineas(l_nom_fichero, 0) then return false end if
+
+
+   return true
+end function
+{----------------------------------------------------------------------------}
