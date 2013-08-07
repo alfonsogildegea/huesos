@@ -1,0 +1,18 @@
+
+{ 
+(fnc)00|======================================================================
+(fnc)01|Nombre funcion..| <NOMBRE_FUNCION>
+(fnc)03|Descripcion.....| <DESC_FUNCION>
+(fnc)03|                | 
+(fnc)08|Valor.recibidos.| 
+(fnc)09|Valor.devueltos.| true/false
+(fnc)18|Globales utiliz.|
+(fnc)19|Globales modifi.|
+(fnc)99|----------------------------------------------------------------------
+}
+function <NOMBRE_FUNCION>()
+
+       
+  return true
+end function
+{----------------------------------------------------------------------------}
