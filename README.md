@@ -27,11 +27,12 @@ En la práctica, no es bueno irte a la línea de comandos y escribir este choriz
 ### Tokens
 
 ¿Recuerdas la opción "Combinar correspondencia" del Word? La idea es escribir una carta modelo y reemplazar unos campos por textos de un origen de datos. De manera análoga, para un Hueso, un token es un campo que se reemplaza por una cadena de texto.
-Así si tenemos una plantilla con el esqueleto de un mantenimiento simple y el nombre del programa aparece en muchos sitios, podemos usar el token <PROGRAMA> y el Hueso copiará al portapapeles la plantilla reemplazando estos tokens por un texto que te pedirá en la linea de comandos. 
+Así si tenemos una plantilla con el esqueleto de un mantenimiento simple y el nombre del programa aparece en muchos sitios, podemos usar el token \<PROGRAMA\> y el Hueso copiará al portapapeles la plantilla reemplazando estos tokens por un texto que te pedirá en la linea de comandos. 
 
 ```
-Ej:
-
 $ java -jar huesos.jar -p esqueletos/funcion2.txt
 ```
+
+Cuando el Hueso tiene pocos tokens se pueden ir escribiendo sus textos uno a uno, pero si son muchos tokens es más facil mandarle los textos al Hueso usando el portapapeles. Es decir, copias los textos de los tokens al portapapeles separados por un tabulador, lanzas el Hueso con "-e" y éste te devuelve en el portapapeles la plantalla con los tokens reemplazados.
+Para mí, lo más útil es tener una excel con dos filas la primera con los tokens y la segunda con los valores de esos tokens (Ojo que el orden de los tokens tiene que ser el orden en el que aparecen en la plantilla), cuando quiero lanzar un hueso, añado los valores en la segunda fila, copio al portapapeles y pincho un hipervínculo a un acceso directo con el comando "java -jar huesos.jar -p [plantilla.txt] -e"
 
