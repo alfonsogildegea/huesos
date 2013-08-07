@@ -1,7 +1,7 @@
 CREATE TABLE <TABLA> (
-   control_i integer not null,
-   control_m integer not null,
-   orden     integer not null,
+   control_i  integer not null,
+   control_m  integer not null,
+   orden      integer not null,
    
 <CAMPOS>
 ) IN #DBD#  EXTENT SIZE 160 {160} NEXT SIZE 16 {16} LOCK MODE ROW; 
