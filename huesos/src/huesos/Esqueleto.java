@@ -85,7 +85,7 @@ public class Esqueleto {
 	           }
 	        }	
 
-			System.out.println("Plantilla: ");
+			System.out.println("\nPlantilla: ");
 			System.out.println(hueso.getPlantilla());
 		}
 
