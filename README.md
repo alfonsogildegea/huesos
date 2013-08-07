@@ -33,6 +33,19 @@ Así si tenemos una plantilla con el esqueleto de un mantenimiento simple y el n
 $ java -jar huesos.jar -p esqueletos/funcion2.txt
 ```
 
+
+#### Lanzar un hueso desde una hoja excel
 Cuando el Hueso tiene pocos tokens se pueden ir escribiendo sus textos uno a uno, pero si son muchos tokens es más facil mandarle los textos al Hueso usando el portapapeles. Es decir, copias los textos de los tokens al portapapeles separados por un tabulador, lanzas el Hueso con "-e" y éste te devuelve en el portapapeles la plantalla con los tokens reemplazados.
 Para mí, lo más útil es tener una excel con dos filas la primera con los tokens y la segunda con los valores de esos tokens (Ojo que el orden de los tokens tiene que ser el orden en el que aparecen en la plantilla), cuando quiero lanzar un hueso, añado los valores en la segunda fila, copio al portapapeles y pincho un hipervínculo a un acceso directo con el comando "java -jar huesos.jar -p [plantilla.txt] -e"
+
+##### Crear un acceso directo al Hueso con la plantilla
+Botón derecho en una carpeta, nuevo, acceso directo. En el destino: "C:\Windows\System32\java.exe -jar huesos.jar -p [plantilla] -e" y en Inicial en: "[carpeta donde esté el huesos.jar]"
+
+##### Crear una celda con un hipervínculo al acceso directo
+![enlace_hipervinculo](https://raw.github.com/alfonsogildegea/huesos/master/huesos/doc/resources/enlace_hipervinculo.png)
+![hipervinculo](https://raw.github.com/alfonsogildegea/huesos/master/huesos/doc/resources/hipervinculo.png)
+
+##### Lanzar el hueso
+Sólo hay que copiar al portapapeles los valores y pinchar en el hipervínculo. Si te pregunta el excel si te fías de lo que vas a ejecutar, le dices que sí.
+
 
